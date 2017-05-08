@@ -1,0 +1,60 @@
+version: '2'
+services:
+    n0:
+        image: java:8
+        working_dir: /usr/src
+        command: java -jar iri-1.1.3.6.jar -p 14700 --testnet --remote --debug -n 'udp://n0:14700 udp://n1:14700 udp://n2:14700 udp://n3:14700' -u 14700
+        ports:
+            - 14700:14700
+            - 5005:5005
+        expose: 
+            - "14700"
+        volumes:
+            - $PWD/target/iri-1.1.3.6.jar:/usr/src/iri-1.1.3.6.jar
+              #- $PWD/exportn0/:/usr/src/export
+              #- $PWD/exportn0s/:/usr/src/export-solid
+              #- $PWD/db.coo:/usr/src/db
+        restart: always
+    n1:
+        image: java:8
+        working_dir: /usr/src
+        #command: java -jar iri-1.1.3.6.jar -p 14700 --testnet --remote --debug -n 'udp://n0:14700 udp://n1:14700 udp://n2:14700 udp://n3:14700'
+        command: java -jar iri-1.1.3.6.jar -p 14700 --testnet --remote --debug -n 'udp://n0:14700 udp://n1:14700 udp://n2:14700 udp://n3:14700' -u 14700
+        ports:
+            - 14701:14700
+        expose: 
+            - "14700"
+        volumes:
+            - $PWD/target/iri-1.1.3.6.jar:/usr/src/iri-1.1.3.6.jar
+            #- $PWD/exportn1/:/usr/src/export
+    n2:
+        image: java:8
+        working_dir: /usr/src
+        command: java -jar iri-1.1.3.6.jar -p 14700 --testnet --remote --debug -n 'udp://n0:14700 udp://n1:14700 udp://n2:14700 udp://n3:14700' -u 14700
+        ports:
+            - 14702:14700
+        expose: 
+            - "14700"
+        volumes:
+            - $PWD/target/iri-1.1.3.6.jar:/usr/src/iri-1.1.3.6.jar
+    n3:
+        image: java:8
+        working_dir: /usr/src
+        command: java -jar iri-1.1.3.6.jar -p 14700 --testnet --remote --debug -n 'udp://n0:14700 udp://n1:14700 udp://n2:14700 udp://n3:14700' -u 14700
+        ports:
+            - 14703:14700
+        expose: 
+            - "14700"
+        volumes:
+            - $PWD/target/iri-1.1.3.6.jar:/usr/src/iri-1.1.3.6.jar
+    spammer:
+        image: node:7
+        working_dir: /app
+        volumes:
+          - ./:/app
+        command: node milestone.js
+
+networks:
+  default:
+    external:
+      name: iota
